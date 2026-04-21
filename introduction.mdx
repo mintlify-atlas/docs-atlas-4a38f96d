@@ -1,0 +1,70 @@
+---
+title: "Unplugin Turbo Console — overview and key features"
+description: "A universal build plugin enhancing console statements with highlighting, editor links, bidirectional log passing, and a real-time inspector. Zero runtime cost."
+---
+
+Unplugin Turbo Console is a build-time plugin that makes `console` statements dramatically more useful during development. Instead of hunting through your source files to find where a log came from, the plugin automatically annotates each statement with its filename, line number, and variable names — and adds a clickable link that opens the exact location in your editor. It runs at build time via [unplugin](https://unplugin.unjs.io), which means it works with every major bundler without requiring any runtime dependency.
+
+## Features
+
+<CardGroup cols={2}>
+  <Card title="Highlight Output" icon="paintbrush" href="/features/highlight">
+    Color-coded console output that makes logs visually distinct and easy to
+    scan, with optional theme detection to match your system appearance.
+  </Card>
+  <Card title="Launch Editor" icon="arrow-up-right-from-square" href="/features/launch-editor">
+    Every console statement is decorated with a clickable URL that jumps
+    directly to the originating file and line in your editor.
+  </Card>
+  <Card title="Pass Logs" icon="truck" href="/features/pass-logs">
+    Forward console output from server-side or SSR contexts back to the
+    browser console so all your logs appear in one place.
+  </Card>
+  <Card title="Console Inspector" icon="magnifying-glass" href="/features/inspector">
+    A real-time web UI that captures and displays all console output from
+    your application in a dedicated inspector panel.
+  </Card>
+  <Card title="Prefix & Suffix" icon="tag" href="/features/custom-prefix">
+    Attach custom prefix and suffix strings to every console statement to
+    namespace logs or add contextual labels automatically.
+  </Card>
+  <Card title="Configuration" icon="sliders" href="/guides/configuration">
+    All features are individually configurable. Explore every available
+    option and their defaults in the configuration reference.
+  </Card>
+</CardGroup>
+
+## How it works
+
+Unplugin Turbo Console hooks into your bundler's transform pipeline using [unplugin](https://unplugin.unjs.io). At build time, it parses each source file with an OXC-based AST parser, locates every `console.*` call, and rewrites it to include additional arguments — the source filename, line number, and the names of any variables being logged.
+
+For the Launch Editor feature, the plugin also starts a lightweight local HTTP server (default: `127.0.0.1:3070`) when your dev server runs. The server receives requests from clickable log URLs in the browser and calls `launch-editor` to open your editor at the exact file and line. No browser extension or runtime package is needed; the transformation happens entirely at build time.
+
+Because all modifications are applied before the code reaches the browser or Node.js runtime, Unplugin Turbo Console has zero effect on your production bundle — all enhancements are stripped automatically when `NODE_ENV` is set to `production`.
+
+## Supported frameworks
+
+Unplugin Turbo Console supports every major bundler and meta-framework through a single package with per-bundler entry points:
+
+| Category | Frameworks |
+|---|---|
+| **Build tools** | Vite, Webpack, Rspack, Rollup, esbuild, Farm |
+| **Meta-frameworks** | Nuxt, SvelteKit, Astro, Next.js, SolidStart |
+
+All entry points are exported from the `unplugin-turbo-console` package (e.g. `unplugin-turbo-console/vite`, `unplugin-turbo-console/webpack`, `unplugin-turbo-console/nuxt`). See [Get started](/getting-started) for framework-specific setup code.
+
+## Requirements
+
+- **Node.js** >= 20
+- One of the following bundlers (all listed as optional peer dependencies):
+
+| Peer dependency | Required version |
+|---|---|
+| `vite` | >= 3 |
+| `webpack` | >= 5 |
+| `rollup` | >= 3 |
+| `esbuild` | any |
+| `@farmfe/core` | >= 1 |
+| `astro` | >= 3 |
+| `@nuxt/kit` | >= 3 |
+| `@nuxt/schema` | >= 3 |

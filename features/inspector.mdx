@@ -1,0 +1,86 @@
+---
+title: "Console inspector for real-time console statement monitoring"
+description: "The Console Inspector provides a browser UI to monitor all active console statements with launch editor support. Integrates with Nuxt Devtools and Vue Devtools."
+---
+
+The Console Inspector is a browser-based UI that provides real-time monitoring of all active `console` statements in your project. It also integrates with the Launch Editor feature, so you can click any log entry in the inspector to jump to its source line in your editor.
+
+When the dev server starts, the inspector URL is printed to your terminal by default so you can open it immediately.
+
+## Nuxt Devtools integration
+
+If you are using Nuxt, the Console Inspector is available directly inside the Nuxt Devtools panel — no additional configuration required. Open Nuxt Devtools and navigate to the Turbo Console tab to access it.
+
+## Vue Devtools integration
+
+The Console Inspector can also be embedded in [Vue Devtools](https://devtools.vuejs.org/). This requires the `@vue/devtools-api` package and one extra import in your entry file.
+
+<Steps>
+  <Step title="Install @vue/devtools-api">
+
+    <CodeGroup>
+
+    ```shell npm
+    npm install -D @vue/devtools-api
+    ```
+
+    ```shell pnpm
+    pnpm install -D @vue/devtools-api
+    ```
+
+    ```shell yarn
+    yarn add -D @vue/devtools-api
+    ```
+
+    ```shell bun
+    bun install -D @vue/devtools-api
+    ```
+
+    </CodeGroup>
+
+  </Step>
+
+  <Step title="Import the virtual module in your entry file">
+
+    Add the following import to your application entry file (for example `main.js`):
+
+    ```js main.js
+    import '~console/vue-devtools'
+    ```
+
+    The `~console/vue-devtools` virtual module registers the Console Inspector as a custom Vue Devtools panel. Its type declaration ships in `client.d.ts`:
+
+    ```ts
+    declare module '~console/vue-devtools'
+    ```
+
+  </Step>
+</Steps>
+
+## Options reference
+
+<AccordionGroup>
+  <Accordion title="Disable inspector">
+
+```js
+TurboConsole({
+  inspector: false,
+})
+```
+
+  </Accordion>
+
+  <Accordion title="Suppress inspector URL on server start">
+
+By default, the inspector URL is printed to the terminal each time the dev server starts. Set `printUrl: false` to suppress it.
+
+```js
+TurboConsole({
+  inspector: {
+    printUrl: false,
+  },
+})
+```
+
+  </Accordion>
+</AccordionGroup>

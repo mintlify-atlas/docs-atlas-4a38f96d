@@ -1,0 +1,66 @@
+{
+  "projectType": "sdk-library",
+  "projectName": "Unplugin Turbo Console",
+  "projectDescription": "A universal build plugin that enhances the developer experience of console statements with highlighting, clickable source links, prefix/suffix customization, log passing between server and client, and a real-time console inspector.",
+  "theme": "luma",
+  "primaryColor": "#6aad59",
+  "lightColor": "#292929",
+  "darkColor": "#b5b5b5",
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Get Started",
+            "pages": [
+              "introduction",
+              "getting-started"
+            ]
+          },
+          {
+            "group": "Features",
+            "pages": [
+              "features/highlight",
+              "features/launch-editor",
+              "features/pass-logs",
+              "features/inspector",
+              "features/custom-prefix"
+            ]
+          },
+          {
+            "group": "Guides",
+            "pages": [
+              "guides/configuration",
+              "guides/troubleshooting",
+              "guides/migration"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "keyFeatures": [
+    "Highlight console output by file type (JS/TS/Vue/Svelte/Astro) with filename and line number",
+    "Launch Editor — click console links to jump directly to source code in your editor",
+    "Pass Logs — relay console output between server and client via WebSocket",
+    "Console Inspector — real-time UI to monitor all console statements with Nuxt Devtools and Vue Devtools integration",
+    "Prefix & Suffix — add custom text around console output (persists at build time)",
+    "Universal framework support: Vite, Webpack, Rspack, Rollup, esbuild, Farm, Nuxt, SvelteKit, Astro, Next.js, SolidStart"
+  ],
+  "publicApiSurface": [
+    "unplugin-turbo-console (default export — unplugin factory)",
+    "unplugin-turbo-console/vite",
+    "unplugin-turbo-console/webpack",
+    "unplugin-turbo-console/rspack",
+    "unplugin-turbo-console/rollup",
+    "unplugin-turbo-console/esbuild",
+    "unplugin-turbo-console/farm",
+    "unplugin-turbo-console/nuxt",
+    "unplugin-turbo-console/astro",
+    "unplugin-turbo-console/helper (client, server)",
+    "unplugin-turbo-console/client (TypeScript type declarations)",
+    "Options: prefix, suffix, launchEditor, highlight, passLogs, inspector, server",
+    "Virtual modules: ~console, ~console/theme-detect, ~console/vue-devtools, ~console/server-info"
+  ]
+}

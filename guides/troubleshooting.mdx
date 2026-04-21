@@ -1,0 +1,92 @@
+---
+title: "Troubleshooting common Unplugin Turbo Console issues"
+description: "Solutions for common issues: Launch Editor not working in VS Code, disabling the plugin for specific console statements, and other known edge cases."
+---
+
+This page covers the most common problems you may run into when using Unplugin Turbo Console and explains how to resolve each one.
+
+<AccordionGroup>
+  <Accordion title="Launch Editor not working in VS Code">
+    If you see the following error when clicking a log line:
+
+    ```
+    Could not open xxxx in the editor.
+
+    The editor process exited with an error: spawn code ENOENT.
+    ```
+
+    The cause is that the `code` shell command is not installed. VS Code ships a
+    CLI helper that must be registered separately on macOS and Linux.
+
+    **Fix:** Follow the [VS Code guide for installing the `code` command](https://code.visualstudio.com/docs/setup/mac#_launching-from-the-command-line) for your platform.
+
+    **Alternative:** If you prefer not to install the shell command, set the
+    `specifiedEditor` sub-option to point directly at the editor executable:
+
+    ```ts
+    TurboConsole({
+      launchEditor: {
+        specifiedEditor: 'code',
+      },
+    })
+    ```
+
+    See the [full list of supported editor values](https://github.com/yyx990803/launch-editor#supported-editors) for other editors.
+  </Accordion>
+
+  <Accordion title="How to disable the plugin for specific console statements">
+    You can opt individual lines or entire files out of plugin processing using
+    special comments.
+
+    **Single line — disable the next line:**
+
+    ```js
+    // turbo-console-disable-next-line
+    console.log('foo')
+    ```
+
+    **Single line — disable the current line:**
+
+    ```js
+    console.log('bar') // turbo-console-disable-line
+    ```
+
+    **Entire file — add this comment at the top of the file:**
+
+    ```js
+    /* turbo-console-disable */
+    console.log('foo')
+    console.log('bar')
+    ```
+  </Accordion>
+
+  <Accordion title="Vue CLI: transform not working">
+    Vue CLI enables `parallel: true` by default, which runs Babel workers in
+    separate threads. This prevents the plugin transform from running correctly.
+
+    **Fix:** Disable parallelisation in `vue.config.js`:
+
+    ```js vue.config.js
+    module.exports = {
+      parallel: false,
+    }
+    ```
+  </Accordion>
+
+  <Accordion title="Features not working in production">
+    The following features are automatically disabled when
+    `NODE_ENV === 'production'`:
+
+    - `launchEditor`
+    - `highlight`
+    - `passLogs`
+    - `inspector`
+
+    This is intentional — these features are development aids and are not meant
+    to ship to end users. No configuration change will re-enable them in
+    production builds.
+
+    The only options that remain active in production are `prefix` and `suffix`,
+    which affect the raw console output string.
+  </Accordion>
+</AccordionGroup>

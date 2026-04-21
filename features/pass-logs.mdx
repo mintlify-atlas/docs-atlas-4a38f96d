@@ -1,0 +1,128 @@
+---
+title: "Pass logs between server and client over WebSocket"
+description: "Forward server-side console output to the browser, or send client-side logs to your terminal. Powered by a WebSocket connection via the ~console virtual module."
+---
+
+Pass Logs is a bidirectional log relay. It lets you send server-side `console` output to the browser DevTools console, and client-side `console` output to your terminal — all over a WebSocket connection established between your app and the Turbo Console dev server.
+
+## Initialization
+
+Add `import '~console'` to your project's client-side entry file. This imports the `~console` virtual module, which establishes the WebSocket connection at runtime.
+
+<CodeGroup>
+
+```vue app.vue (Nuxt)
+<!-- app.vue -->
+<script setup lang="ts">
+import '~console'
+</script>
+```
+
+```svelte +page.svelte (SvelteKit)
+<!-- +page.svelte -->
+<script lang="ts">
+import '~console'
+</script>
+```
+
+```tsx entry-client.tsx (SolidStart)
+// entry-client.tsx
+import { StartClient, mount } from '@solidjs/start/client'
+import '~console'
+
+mount(() => <StartClient />, document.getElementById('app')!)
+```
+
+</CodeGroup>
+
+<Accordion title="What is ~console?">
+  `~console` is a virtual module provided by Turbo Console. When imported, it runs client-side code that opens a WebSocket connection to the Turbo Console dev server. All Pass Logs traffic — in both directions — flows through this connection. The implementation lives in [`src/core/utils/virtualModules.ts`](https://github.com/unplugin/unplugin-turbo-console/blob/main/src/core/utils/virtualModules.ts) in the source repository.
+</Accordion>
+
+<Note>
+  For TypeScript projects, `~console` must be declared as a module. See [Configuration](/guides/configuration) for the required `tsconfig` entry — the declaration is already included in `client.d.ts`:
+
+  ```ts
+  declare module '~console'
+  ```
+</Note>
+
+## Server → Client
+
+To forward a log from server-side code to the browser console, import `client` from `unplugin-turbo-console/helper` and call it instead of `console`. The `client` object mirrors the `console` API and sends each call to the browser over the WebSocket.
+
+```ts server/api/test.ts (Nuxt)
+import { client } from 'unplugin-turbo-console/helper'
+import { defineEventHandler } from 'h3'
+
+export default defineEventHandler(async (event) => {
+  const raw = await fetch('https://jsonplaceholder.typicode.com/users')
+  const data = await raw.json()
+
+  client.log({ data })
+  client.warn('A warning message from server!!')
+  client.error('An error message from server!!')
+
+  return {
+    data
+  }
+})
+```
+
+## Client → Server
+
+To forward a log from client-side code to the terminal, import `server` from `unplugin-turbo-console/helper` and call it instead of `console`. Each call is sent to the dev server over the active WebSocket connection.
+
+```vue
+<script setup lang="ts">
+import { server } from 'unplugin-turbo-console/helper'
+import { ref } from 'vue'
+
+const count = ref(0)
+
+function increment() {
+  count.value++
+  server.log(count.value)
+}
+</script>
+
+<template>
+  <div>
+    {{ count }}
+  </div>
+  <button @click="increment">
+    +
+  </button>
+</template>
+```
+
+<Tip>
+  If you are using Nuxt, `client` and `server` are auto-imported. You do not need to add the import statement manually.
+</Tip>
+
+## Type signatures
+
+Both helpers implement the `TConsole` type, which is a record of the following methods — each accepting any number of arguments:
+
+```ts
+type TCMethod = 'log' | 'error' | 'warn' | 'info' | 'table' | 'dir'
+
+type TConsole = Record<TCMethod, (...args: any[]) => void>
+```
+
+`client: TConsole` — logs locally on the server and relays to the browser console.  
+`server: TConsole` — logs locally in the browser and relays to the terminal via WebSocket.
+
+## Options reference
+
+<AccordionGroup>
+  <Accordion title="Disable pass logs">
+
+```js
+TurboConsole({
+  passLogs: false,
+})
+```
+
+  </Accordion>
+</AccordionGroup>

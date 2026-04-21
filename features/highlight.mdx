@@ -1,0 +1,105 @@
+---
+title: "Highlight console output with file type and line info"
+description: "Automatically color-code console output based on file type (JS, TS, Vue, Svelte, Astro) with the filename, line number, and variable name shown in every log."
+---
+
+Turbo Console automatically color-codes your `console` output based on the source file type — `.js(x)`, `.ts(x)`, `.vue`, `.svelte`, and `.astro` each get a distinct color. Every log line is annotated with the filename, line number, and variable name so you can trace output back to its origin at a glance.
+
+## Expand path file names
+
+When multiple files share the same name — a common pattern with framework conventions — the default filename label becomes ambiguous. For example, a project might contain:
+
+```
+pages
+├── bar
+│   └── index.vue
+├── foo
+│   └── index.vue
+└── index.vue
+```
+
+With the default behavior, all three files display as `index.vue` in the console output. Setting `extendedPathFileNames: ['index']` tells Turbo Console to include the parent directory in the label whenever the filename matches an entry in the array, making each log uniquely identifiable.
+
+```ts
+TurboConsole({
+  highlight: {
+    extendedPathFileNames: ['index'],
+  },
+})
+```
+
+## Theme detection
+
+By default, highlight colors are tuned for light backgrounds. When `themeDetect: true` is set, Turbo Console reads the system color scheme and switches to a dark-mode-optimized palette automatically.
+
+```ts
+TurboConsole({
+  highlight: {
+    themeDetect: true,
+  },
+})
+```
+
+After enabling this option, import the `~console/theme-detect` virtual module in your project entry file so the theme preference is communicated to the runtime:
+
+<CodeGroup>
+
+```ts main.ts (Vite)
+import '~console/theme-detect'
+```
+
+```vue app.vue (Nuxt)
+<script setup lang="ts">
+import '~console/theme-detect'
+</script>
+```
+
+</CodeGroup>
+
+<Note>
+  `~console/theme-detect` is a virtual module provided by Turbo Console. For TypeScript projects, add the type declaration to your `tsconfig`. See [Configuration](/guides/configuration) for details.
+</Note>
+
+## Options reference
+
+<AccordionGroup>
+  <Accordion title="Disable highlight">
+
+```ts
+TurboConsole({
+  highlight: false,
+})
+```
+
+  </Accordion>
+
+  <Accordion title="extendedPathFileNames">
+
+Provide an array of filename stems (without extension). When a file's base name matches, the output label is prefixed with the parent directory path.
+
+```ts
+TurboConsole({
+  highlight: {
+    extendedPathFileNames: ['index'],
+  },
+})
+```
+
+  </Accordion>
+
+  <Accordion title="themeDetect">
+
+Detect the system color scheme and optimize highlight colors for dark mode. Requires importing `~console/theme-detect` in your entry file.
+
+```ts
+TurboConsole({
+  highlight: {
+    themeDetect: true,
+  },
+})
+```
+
+  </Accordion>
+</AccordionGroup>
+
+For the full TypeScript type definitions for these options, see [Configuration](/guides/configuration).

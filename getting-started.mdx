@@ -1,0 +1,249 @@
+---
+title: "Install and configure Unplugin Turbo Console plugin"
+description: "Install unplugin-turbo-console and add it to your Vite, Webpack, Nuxt, SvelteKit, Astro, or other build tool in under two minutes."
+---
+
+This page walks you through installing `unplugin-turbo-console` and integrating it with your build tool or meta-framework. The entire setup takes two steps: install the package, then add the plugin to your configuration file.
+
+<Note>
+  All Turbo Console features — highlighting, launch editor, pass logs, and the
+  inspector — are disabled automatically when `NODE_ENV === 'production'`. You
+  never need to guard the plugin with environment checks yourself.
+</Note>
+
+<Steps>
+  <Step title="Install">
+    Add `unplugin-turbo-console` as a dev dependency using your preferred package manager.
+
+    <CodeGroup>
+
+    ```bash npm
+    npm i unplugin-turbo-console --save-dev
+    ```
+
+    ```bash yarn
+    yarn add unplugin-turbo-console -D
+    ```
+
+    ```bash pnpm
+    pnpm add -D unplugin-turbo-console
+    ```
+
+    ```bash bun
+    bun add unplugin-turbo-console -d
+    ```
+
+    </CodeGroup>
+  </Step>
+
+  <Step title="Configure your build tool">
+    Add the plugin to your framework or bundler configuration. Select the tab that matches your setup.
+
+    #### Build tools
+
+    <CodeGroup>
+
+    ```ts vite.config.ts
+    // vite.config.ts
+    import { defineConfig } from 'vite'
+    import TurboConsole from 'unplugin-turbo-console/vite'
+
+    export default defineConfig({
+      plugins: [
+        TurboConsole({
+          /* options here */
+        })
+      ],
+    })
+    ```
+
+    ```js webpack.config.js
+    // webpack.config.js
+    module.exports = {
+      /* ... */
+      plugins: [
+        require('unplugin-turbo-console/webpack').default({ /* options */ }),
+      ],
+    }
+    ```
+
+    ```js vue.config.js
+    // vue.config.js
+    const { defineConfig } = require('@vue/cli-service')
+
+    module.exports = defineConfig({
+      transpileDependencies: true,
+      parallel: false, // important!
+      configureWebpack: {
+        plugins: [
+          require('unplugin-turbo-console/webpack').default({
+            /* options here */
+          })
+        ]
+      }
+    })
+    ```
+
+    ```js rspack.config.js
+    // rspack.config.js
+    const rspack = require('@rspack/core')
+    const { VueLoaderPlugin } = require('vue-loader')
+    /** @type {import('@rspack/cli').Configuration} */
+
+    const config = {
+      plugins: [
+        new VueLoaderPlugin(),
+        new rspack.HtmlRspackPlugin({
+          template: './index.html'
+        }),
+        require('unplugin-turbo-console/rspack').default({
+            /* options here */
+        }),
+      ],
+
+    }
+    module.exports = config
+    ```
+
+    ```ts farm.config.ts
+    // farm.config.ts
+    import { defineConfig } from '@farmfe/core'
+    import vue from '@vitejs/plugin-vue'
+    import TurboConsole from 'unplugin-turbo-console/farm'
+
+    export default defineConfig({
+      vitePlugins: [
+        vue(),
+      ],
+      plugins: [
+        TurboConsole({
+            /* options here */
+        })
+      ]
+    })
+    ```
+
+    ```js rollup.config.js
+    // rollup.config.js
+    import TurboConsole from 'unplugin-turbo-console/rollup'
+
+    export default {
+      plugins: [
+        TurboConsole({ /* options here */ }),
+      ],
+    }
+    ```
+
+    ```js esbuild
+    // esbuild
+    import { build } from 'esbuild'
+    import TurboConsole from 'unplugin-turbo-console/esbuild'
+
+    build({
+      plugins: [
+        TurboConsole({ /* options here */ }),
+      ],
+    })
+    ```
+
+    </CodeGroup>
+
+    #### Meta-frameworks
+
+    <CodeGroup>
+
+    ```ts nuxt.config.ts
+    // nuxt.config.ts
+    export default defineNuxtConfig({
+      modules: [
+        'unplugin-turbo-console/nuxt'
+      ],
+      turboConsole: {
+        /* options here */
+      }
+    })
+    ```
+
+    ```ts svelte.config.js (vite config)
+    import { sveltekit } from '@sveltejs/kit/vite'
+    import { defineConfig } from 'vite'
+    import TurboConsole from 'unplugin-turbo-console/vite'
+
+    export default defineConfig({
+      plugins: [
+        TurboConsole(), // Please add this plugin before sveltekit
+        sveltekit()
+      ]
+    })
+    ```
+
+    ```js astro.config.mjs
+    // astro.config.mjs
+    import { defineConfig } from 'astro/config'
+    import TurboConsole from 'unplugin-turbo-console/astro'
+
+    // https://astro.build/config
+    export default defineConfig({
+      integrations: [
+        TurboConsole()
+      ]
+    })
+    ```
+
+    ```js next.config.js
+    // next.config.js
+    /** @type {import('next').NextConfig} */
+    const nextConfig = {
+      webpack(config) {
+        config.plugins.push(
+          require('unplugin-turbo-console/webpack').default()
+        )
+
+        return config
+      }
+    }
+
+    module.exports = nextConfig
+    ```
+
+    ```ts app.config.ts (SolidStart)
+    import { defineConfig } from '@solidjs/start/config'
+    import TurboConsole from 'unplugin-turbo-console/vite'
+
+    export default defineConfig({
+      vite: {
+        plugins: [
+          TurboConsole()
+        ]
+      },
+    })
+    ```
+
+    </CodeGroup>
+
+    <Warning>
+      **Vue CLI:** You must set `parallel: false` in `vue.config.js`. Without
+      it, the webpack transform runs in a worker thread where the plugin cannot
+      intercept module loading correctly.
+    </Warning>
+
+    <Tip>
+      **SvelteKit:** Always add `TurboConsole()` **before** `sveltekit()` in
+      the plugins array. Placing it after will prevent the plugin from
+      transforming your source files.
+    </Tip>
+  </Step>
+
+  <Step title="Verify">
+    Start your development server and open your application in the browser. Any `console.log` (or `console.warn`, `console.error`, etc.) statements in your source code will now appear in the browser console with:
+
+    - **Filename and line number** displayed prominently before the logged value
+    - **Variable names** printed alongside their values so you always know what you are looking at
+    - **Color highlighting** that makes log output visually distinct from other browser messages
+    - **A clickable link** (when Launch Editor is enabled) that opens the exact source location in your editor
+
+    No changes to your application code are needed. The plugin rewrites `console` calls automatically at build time.
+  </Step>
+</Steps>
+
+For a full list of available options — including how to configure highlighting colors, specify a preferred editor, set a custom server port, and more — see the [Configuration reference](/guides/configuration).

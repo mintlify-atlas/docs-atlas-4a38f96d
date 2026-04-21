@@ -1,0 +1,61 @@
+---
+title: "Migrate Unplugin Turbo Console from version 1 to version 2"
+description: "Breaking changes in v2 include dropping Node.js <20 and Webpack 4 support, plus a redesigned options API. Use this guide to update your configuration."
+---
+
+Version 2 of Unplugin Turbo Console raises the minimum runtime and bundler requirements and introduces a consolidated options API that replaces several narrow boolean flags with composable option objects. Follow the steps below to update your project.
+
+<Tip>
+  After migrating, see the [configuration reference](/guides/configuration) for
+  the complete v2 options API with all defaults documented.
+</Tip>
+
+## Breaking changes
+
+### Node.js requirement
+
+The minimum supported Node.js version is now **20**. Versions below 20 are no longer tested or supported. Update your runtime before upgrading the plugin.
+
+### Webpack 4 dropped
+
+Webpack 4 and Vue CLI 4 are no longer supported. The minimum supported bundler is **Webpack 5**. If your project uses Vue CLI 4, you will need to upgrade to Vue CLI 5 (which uses Webpack 5) or migrate to a Vite-based setup before upgrading.
+
+### Options API changes
+
+Many v1 options have been removed and replaced with a smaller set of composable options. The table below maps every removed v1 option to its v2 equivalent.
+
+| v1 option | v2 equivalent |
+|-----------|--------------|
+| `disableLaunchEditor` | `launchEditor: false` |
+| `specifiedEditor` | `launchEditor: { specifiedEditor: 'editor' }` |
+| `disableHighlight` | `highlight: false` |
+| `port` | `server: { port: number }` |
+| `extendedPathFileNames` | `highlight: { extendedPathFileNames: [...] }` |
+| `disablePassLogs` | `passLogs: false` |
+| `silent` | `inspector: false` or `inspector: { printUrl: false }` |
+
+**Example — v1 configuration:**
+
+```ts
+TurboConsole({
+  disableLaunchEditor: true,
+  specifiedEditor: 'webstorm',
+  disableHighlight: false,
+  port: 4000,
+  extendedPathFileNames: ['components'],
+  disablePassLogs: false,
+  silent: true,
+})
+```
+
+**Equivalent v2 configuration:**
+
+```ts
+TurboConsole({
+  launchEditor: { specifiedEditor: 'webstorm' },
+  highlight: { extendedPathFileNames: ['components'] },
+  server: { port: 4000 },
+  passLogs: true,
+  inspector: { printUrl: false },
+})
+```

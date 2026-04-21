@@ -1,97 +1,71 @@
 ---
-title: "Introduction"
-description: "Welcome to the new home for your documentation"
+title: "Unplugin Turbo Console: Supercharge your console DX"
+description: "Enhance console statements with highlighting, editor links, log passing, and an inspector. Works with Vite, Webpack, Nuxt, Astro, SvelteKit, and more."
 ---
 
-## Setting up
+Unplugin Turbo Console is a universal build plugin that transforms the way you use `console` in frontend development. It adds color-coded output, clickable links that open your editor at the exact source line, bidirectional log passing between server and client, and a real-time console inspector — all with zero changes to your existing code.
 
-Get your documentation site up and running in minutes.
-
-<Card
-  title="Start here"
-  icon="rocket"
-  href="/quickstart"
-  horizontal
->
-  Follow our three step quickstart guide.
-</Card>
-
-## Make it yours
-
-Design a docs site that looks great and empowers your users.
-
-<Columns cols={2}>
-  <Card
-    title="Edit locally"
-    icon="pen-to-square"
-    href="/development"
-  >
-    Edit your docs locally and preview them in real time.
+<CardGroup cols={2}>
+  <Card title="Get started" icon="rocket" href="/getting-started">
+    Install and integrate with your framework in under two minutes.
   </Card>
-  <Card
-    title="Customize your site"
-    icon="palette"
-    href="/essentials/settings"
-  >
-    Customize the design and colors of your site to match your brand.
+  <Card title="Highlight output" icon="paintbrush" href="/features/highlight">
+    Color-coded console output with filename, line number, and variable names.
   </Card>
-    <Card
-    title="Set up navigation"
-    icon="map"
-    href="/essentials/navigation"
-  >
-    Organize your docs to help users find what they need and succeed with your product.
+  <Card title="Launch editor" icon="arrow-pointer" href="/features/launch-editor">
+    Click any log link to jump straight to the source in your editor.
   </Card>
-  <Card
-    title="API documentation"
-    icon="terminal"
-    href="/api-reference/introduction"
-  >
-    Auto-generate API documentation from OpenAPI specifications.
+  <Card title="Pass logs" icon="arrow-right-arrow-left" href="/features/pass-logs">
+    Relay console output between server and client over WebSocket.
   </Card>
-</Columns>
+  <Card title="Console inspector" icon="magnifying-glass" href="/features/inspector">
+    Real-time UI that monitors all active console statements.
+  </Card>
+  <Card title="Configuration" icon="sliders" href="/guides/configuration">
+    Full reference for all plugin options and TypeScript types.
+  </Card>
+</CardGroup>
 
-## Create beautiful pages
+## Why Unplugin Turbo Console?
 
-Everything you need to create world-class documentation.
+Standard `console.log` output gives you a value and a file name — that's it. When you're debugging across multiple files in a large codebase, you spend more time scanning output than fixing bugs. Unplugin Turbo Console gives each log statement a rich identity: the framework file type, the variable name, the exact source line, and a clickable link back to your editor.
 
-<Columns cols={2}>
-  <Card
-    title="Write with MDX"
-    icon="pen-fancy"
-    href="/essentials/markdown"
-  >
-    Use MDX to style your docs pages.
-  </Card>
-  <Card
-    title="Code samples"
-    icon="code"
-    href="/essentials/code"
-  >
-    Add sample code to demonstrate how to use your product.
-  </Card>
-  <Card
-    title="Images"
-    icon="image"
-    href="/essentials/images"
-  >
-    Display images and other media.
-  </Card>
-  <Card
-    title="Reusable snippets"
-    icon="recycle"
-    href="/essentials/reusable-snippets"
-  >
-    Write once and reuse across your docs.
-  </Card>
-</Columns>
+<Steps>
+  <Step title="Install the package">
+    Add `unplugin-turbo-console` as a dev dependency with your package manager of choice.
+  </Step>
+  <Step title="Add the plugin">
+    Register the plugin in your build tool config — Vite, Webpack, Nuxt, SvelteKit, Astro, and more are all supported.
+  </Step>
+  <Step title="Write console statements as normal">
+    No code changes required. Every existing `console.log`, `console.warn`, and `console.error` is automatically enhanced.
+  </Step>
+  <Step title="Click to open your editor">
+    Each log line in the browser includes a link. Click it to jump directly to the source line.
+  </Step>
+</Steps>
 
-## Need inspiration?
+## Supported frameworks
 
-<Card
-  title="See complete examples"
-  icon="stars"
-  href="https://mintlify.com/customers"
->
-  Browse our showcase of exceptional documentation sites.
-</Card>
+Unplugin Turbo Console works with virtually every modern JavaScript build tool and meta-framework:
+
+<CardGroup cols={3}>
+  <Card title="Vite" icon="bolt" href="/getting-started">
+    Native Vite plugin
+  </Card>
+  <Card title="Webpack" icon="box" href="/getting-started">
+    Webpack 5 plugin
+  </Card>
+  <Card title="Nuxt" icon="layer-group" href="/getting-started">
+    Nuxt module
+  </Card>
+  <Card title="SvelteKit" icon="wind" href="/getting-started">
+    Via Vite plugin
+  </Card>
+  <Card title="Astro" icon="star" href="/getting-started">
+    Astro integration
+  </Card>
+  <Card title="Rspack / Farm" icon="gear" href="/getting-started">
+    Additional bundlers
+  </Card>
+</CardGroup>

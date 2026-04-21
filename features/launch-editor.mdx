@@ -1,0 +1,56 @@
+---
+title: "Open your code editor directly from a console log link"
+description: "Click the link in any highlighted console log to open your code editor and jump directly to the source line. Supports VS Code, WebStorm, and other editors."
+---
+
+Every highlighted console log includes a clickable link. Clicking it opens your code editor and navigates directly to the exact line and column of the `console` statement in the source file — no searching required.
+
+## How it works
+
+Each generated link follows this structure:
+
+```
+http://127.1:3070#3abe,6,3
+```
+
+The URL has two parts:
+
+- **`http://127.1:3070`** — A static page served by a local Node.js server that Turbo Console starts alongside your dev server. (`127.1` is shorthand for `127.0.0.1`.) When the page loads, it reads the hash and forwards it to the Node.js service.
+- **`#3abe,6,3`** — A hash attribute composed of three comma-separated values:
+  - `3abe` — A randomly generated identifier that maps to the specific source file in your project.
+  - `6` — The line number of the `console` statement.
+  - `3` — The column number of the `console` statement.
+
+The Node.js service resolves the file path from the identifier, then calls [launch-editor](https://github.com/yyx990803/launch-editor) to open the editor at the correct location.
+
+<Note>
+  VS Code requires the `code` command to be installed in your PATH. If clicking a link does nothing, see [Troubleshooting](/guides/troubleshooting) for setup instructions.
+</Note>
+
+## Options reference
+
+<AccordionGroup>
+  <Accordion title="Disable launch editor">
+
+```js
+TurboConsole({
+  launchEditor: false,
+})
+```
+
+  </Accordion>
+
+  <Accordion title="specifiedEditor">
+
+Force Turbo Console to open a particular editor instead of auto-detecting. Accepts any editor identifier supported by [launch-editor](https://github.com/yyx990803/launch-editor#supported-editors).
+
+```js
+TurboConsole({
+  launchEditor: {
+    specifiedEditor: 'webstorm',
+  },
+})
+```
+
+  </Accordion>
+</AccordionGroup>

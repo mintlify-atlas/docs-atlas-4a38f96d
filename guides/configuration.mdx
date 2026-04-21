@@ -1,0 +1,133 @@
+---
+title: "Configuration reference for Unplugin Turbo Console"
+description: "Complete reference for all plugin options including highlight, launchEditor, passLogs, inspector, prefix, suffix, and server settings with TypeScript types."
+---
+
+This page documents every available configuration option for Unplugin Turbo Console. Pass an options object to the plugin when registering it in your build tool. All options are optional and fall back to the defaults listed below.
+
+<Note>
+  The `launchEditor`, `highlight`, `passLogs`, and `inspector` options are **automatically disabled in production**. When `NODE_ENV === 'production'`, these features are forced to `false` regardless of what you configure. Only `prefix` and `suffix` take effect in production builds.
+</Note>
+
+## Plugin options
+
+<ParamField body="prefix" type="string" default='""'>
+  A string prepended to every enhanced `console` output. Useful for tagging log
+  lines by feature area or environment.
+</ParamField>
+
+<ParamField body="suffix" type="string" default='""'>
+  A string appended to every enhanced `console` output.
+</ParamField>
+
+<ParamField body="launchEditor" type="boolean | LaunchEditorOption" default="true">
+  Controls the launch-editor feature, which makes console output clickable so
+  your editor opens at the exact source location.
+
+  Set to `false` to disable entirely, `true` to enable with defaults, or pass an
+  object for fine-grained control.
+
+  <Expandable title="LaunchEditorOption properties">
+    <ParamField body="specifiedEditor" type="string">
+      Explicitly name the editor process to launch. When omitted the plugin
+      tries to detect the running editor automatically. See the [full list of
+      supported editors](https://github.com/yyx990803/launch-editor#supported-editors)
+      for accepted values.
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<ParamField body="highlight" type="boolean | HighlightOption" default="true">
+  Controls syntax highlighting applied to console output in the terminal.
+
+  Set to `false` to disable entirely, `true` to enable with defaults, or pass an
+  object for fine-grained control.
+
+  <Expandable title="HighlightOption properties">
+    <ParamField body="extendedPathFileNames" type="string[]">
+      When the source file name or any folder in its path contains a string from
+      this array, the full file path is shown instead of just the file name.
+      Helps distinguish files that share the same base name across different
+      directories.
+    </ParamField>
+
+    <ParamField body="themeDetect" type="boolean" default="false">
+      When `true`, the plugin detects the system color scheme and adjusts
+      highlight colors accordingly. Requires the `~console/theme-detect` virtual
+      module to be imported in your entry file.
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<ParamField body="passLogs" type="boolean" default="true">
+  When `true`, console log values are forwarded to the Turbo Console server so
+  they can be inspected in the browser panel. Set to `false` to keep logs
+  terminal-only.
+</ParamField>
+
+<ParamField body="inspector" type="boolean | InspectorOption" default='{ printUrl: true }'>
+  Controls the inspector integration that lets you inspect log values in a
+  browser UI.
+
+  Set to `false` to disable entirely, `true` to enable with defaults, or pass an
+  object for fine-grained control.
+
+  <Expandable title="InspectorOption properties">
+    <ParamField body="printUrl" type="boolean" default="true">
+      When `true`, the inspector URL is printed to the console when the plugin
+      server starts. Set to `false` to suppress the URL line.
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<ParamField body="server" type="object">
+  Options for the local WebSocket server that powers the inspector and
+  pass-logs features.
+
+  <Expandable title="server properties">
+    <ParamField body="port" type="number" default="3070">
+      The port the plugin server listens on. If the port is already in use, the plugin will automatically try the next available port up to 6000.
+    </ParamField>
+
+    <ParamField body="host" type="string" default='"127.0.0.1"'>
+      The hostname the plugin server binds to.
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+## TypeScript
+
+The plugin ships virtual modules (`~console`, `~console/theme-detect`, etc.) that TypeScript needs to know about. There are two ways to add the type declarations to your project.
+
+**Method 1 — via tsconfig.json:**
+
+```json tsconfig.json
+{
+  "compilerOptions": {
+    "types": ["unplugin-turbo-console/client"]
+  }
+}
+```
+
+**Method 2 — via a declaration file:**
+
+```ts env.d.ts
+/// <reference types="unplugin-turbo-console/client" />
+```
+
+### Virtual module declarations
+
+The following virtual modules are declared in `client.d.ts`:
+
+| Module | Exports |
+|--------|---------|
+| `~console` | — (side-effect import) |
+| `~console/theme-detect` | — (side-effect import) |
+| `~console/vue-devtools` | — (side-effect import) |
+| `~console/server-info` | `host: string`, `port: number` |
+
+Import `~console/server-info` when you need to read the plugin server address at runtime:
+
+```ts
+import { host, port } from '~console/server-info'
+```

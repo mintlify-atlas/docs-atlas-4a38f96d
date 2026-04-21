@@ -1,0 +1,53 @@
+---
+title: "Add a custom prefix and suffix to every console output"
+description: "Configure a prefix and suffix string to wrap every console output. Unlike other features, prefix and suffix also apply in production builds."
+---
+
+Turbo Console can prepend a `prefix` string and append a `suffix` string to every `console` output in your project. Unlike most Turbo Console features that only operate during development, prefix and suffix are also applied at build time — meaning the strings appear in production output as well.
+
+This makes prefix and suffix suitable for persistent log grouping: for example, marking all logs from a specific project, package, or team so they are easy to filter in any environment.
+
+## Options
+
+Configure both values in the plugin options:
+
+```js
+TurboConsole({
+  prefix: '👇👇👇👇👇',
+  suffix: '👆👆👆👆👆',
+})
+```
+
+Each `console` call in your code will then be wrapped by the prefix and suffix strings. Either option can be used independently — you do not need to set both.
+
+<Tip>
+  Because prefix and suffix apply at build time, they are useful for identifying log sources across distributed teams or monorepo packages even in deployed environments.
+</Tip>
+
+## Options reference
+
+<AccordionGroup>
+  <Accordion title="prefix">
+
+A string prepended to every `console` output. Applies during development and in production builds.
+
+```js
+TurboConsole({
+  prefix: '👇👇👇👇👇',
+})
+```
+
+  </Accordion>
+
+  <Accordion title="suffix">
+
+A string appended to every `console` output. Applies during development and in production builds.
+
+```js
+TurboConsole({
+  suffix: '👆👆👆👆👆',
+})
+```
+
+  </Accordion>
+</AccordionGroup>
